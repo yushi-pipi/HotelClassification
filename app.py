@@ -1,13 +1,14 @@
 from flask import Flask,request,abort
 from linebot import(LineBotApi,WebhookHandler)
 from linebot.exceptions import(InvalidSignatureError)
-from linebot.models import(MessageEvent,TextMessage,TextSendMessage)
+from linebot.models import(MessageEvent,TextMessage,TextSendMessage,ImageMessage,ImageSendMessage)
 
 
 app=Flask(__name__)
 
 ACCESS_TOKEN = "/qpqZBhWUEmB1pyOT9pvqMsNaJnTzDc2RF9SXzl2PckRRONWt/PViT9RC8+mVQlYcTCd33zjcKv7QCGD4LCOH64p0QQ7FhAQXMgHKB1O/TaxzMPeiY0h4NeRdhEPU0anNjfHs1pteYicz7m/1wSwqAdB04t89/1O/w1cDnyilFU="
 SECRET = "5668269638be4261988bd1092008c514"
+FQDN = "https://flasktest1206.herokuapp.com/"
 
 
 line_bot_api=LineBotApi(ACCESS_TOKEN)
@@ -30,6 +31,19 @@ def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))
+
+@handler.add(MessageEvent,message=ImageMessage)
+def handle_image_message(event):
+    message_content=line_bot_api.get_message_content(event.message.id)
+    with open("static/"+event.message.id+".jpg","wb") as f:
+        f.write(message_content.content)
+    line_bot_api.reply_message(
+        event.reply_token,
+        ImageSendMessage(
+            original_content_url=FQDN+"/static/"+event.message.id+".jpg",
+            preview_image_url=FQDN+"/static/"+event.message.id+".jpg"
+            )
+        )
 
 if __name__=='__main__':
     app.run()
