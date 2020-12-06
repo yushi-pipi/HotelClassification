@@ -1,4 +1,5 @@
 from flask import Flask,request,abort
+from PIL import Image
 from linebot import(LineBotApi,WebhookHandler)
 from linebot.exceptions import(InvalidSignatureError)
 from linebot.models import(MessageEvent,TextMessage,TextSendMessage,ImageMessage,ImageSendMessage)
@@ -13,6 +14,8 @@ FQDN = "https://flasktest1206.herokuapp.com/"
 
 line_bot_api=LineBotApi(ACCESS_TOKEN)
 handler=WebhookHandler(SECRET)
+
+test_message = 'yushi'
 
 @app.route("/callback",methods=['POST'])
 def callback():
@@ -30,7 +33,7 @@ def callback():
 def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(test_message))
 
 @handler.add(MessageEvent,message=ImageMessage)
 def handle_image_message(event):
