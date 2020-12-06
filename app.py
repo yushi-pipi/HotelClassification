@@ -3,6 +3,7 @@ from PIL import Image
 from linebot import(LineBotApi,WebhookHandler)
 from linebot.exceptions import(InvalidSignatureError)
 from linebot.models import(MessageEvent,TextMessage,TextSendMessage,ImageMessage,ImageSendMessage)
+from predict import start_predict
 
 
 app=Flask(__name__)
@@ -40,6 +41,12 @@ def handle_image_message(event):
     message_content=line_bot_api.get_message_content(event.message.id)
     with open("static/"+event.message.id+".jpg","wb") as f:
         f.write(message_content.content)
+    result=predict_start()
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(result))
+    
+'''
     line_bot_api.reply_message(
         event.reply_token,
         ImageSendMessage(
@@ -47,6 +54,7 @@ def handle_image_message(event):
             preview_image_url=FQDN+"/static/"+event.message.id+".jpg"
             )
         )
+'''
 
 if __name__=='__main__':
     app.run()
