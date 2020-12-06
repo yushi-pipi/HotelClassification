@@ -1,4 +1,4 @@
-from flask import Flask,request,about
+from flask import Flask,request,abort
 from linebot import(LineBotApi,WebhookHandler)
 from linebot.exceptions import(InvalidSignatureError)
 from linebot.models import(MessageEvent,TextMessage,TextSendMessage)
@@ -22,7 +22,7 @@ def collback():
     try:
         handler.handle(body,signature)
     except :
-        about(400)
+        abort(400)
 
     return 'OK'
 
