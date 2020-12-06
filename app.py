@@ -12,7 +12,6 @@ ACCESS_TOKEN = "/qpqZBhWUEmB1pyOT9pvqMsNaJnTzDc2RF9SXzl2PckRRONWt/PViT9RC8+mVQlY
 SECRET = "5668269638be4261988bd1092008c514"
 FQDN = "https://flasktest1206.herokuapp.com/"
 
-
 line_bot_api=LineBotApi(ACCESS_TOKEN)
 handler=WebhookHandler(SECRET)
 
@@ -41,9 +40,6 @@ def handle_image_message(event):
     message_content=line_bot_api.get_message_content(event.message.id)
     with open("static/"+event.message.id+".jpg","wb") as f:
         f.write(message_content.content)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage("判定中..."))
     result=start_predict()
     line_bot_api.reply_message(
         event.reply_token,
