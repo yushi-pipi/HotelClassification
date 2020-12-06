@@ -1,39 +1,37 @@
-from flask import Flask,redirect,url_for,request,logging,jsonify
-import os
+from flask import Flask,request,about
+from linebot import(LineBotApi,WebhookHandler)
+from linebot.exceptions import(InvalidSignatureError)
+from linebot.models import(MessageEvent,TextMessage,TextSendMessage)
 
-app=Flask(__name__)
 
+app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return request.args.get('param','get_test')
+ACCESS_TOKEN = "/qpqZBhWUEmB1pyOT9pvqMsNaJnTzDc2RF9SXzl2PckRRONWt/PViT9RC8+mVQlYcTCd33zjcKv7QCGD4LCOH64p0QQ7FhAQXMgHKB1O/TaxzMPeiY0h4NeRdhEPU0anNjfHs1pteYicz7m/1wSwqAdB04t89/1O/w1cDnyilFU="
+SECRET = "5668269638be4261988bd1092008c514"
 
-@app.route('/hoge')
-def hoge():
-    app.logger.warn('hoge')
-    return 'helloworld_hoge'
+line_bot_api = LineBotApi(ACCESS_TOKEN)
+handler = WebhookHandler(SECRET)
 
-@app.route('/hello')
-def hello():
-    return redirect(url_for('hoge'))
+@app.route('/collback',methods=['POST'])
+def collback():
+    signature = request.handlers['X-Line-Signature']
 
-@app.route('/my',methods=['GET'])
-def my_route_get():
-    return 'get'
+    body = request.get_data(as_text=True)
+    app.logger.info('Request body: ' + body)
 
-@app.route('/my',methods=['POST'])
-def my_route_post():
-    return 'post'
+    try:
+        handler.handle(body,signature)
+    except :
+        about(400)
 
-@app.route('/json')
-def json():
-    return jsonify(name = 'yushi',email='yushi@example.com')
+    return 'OK'
 
-@app.route("/json",methods=['POST'])
-def post_json():
-    json_data = request.get_json()
-    app.logger.warn(json_data)
-    return jsonify(json_data)
+@handler.add(MessageEvent,message=TextMessage)
+def handle_message(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=event.message.text))
 
-if __name__== "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+if __name__=='__main__':
+    app.run()
+    
