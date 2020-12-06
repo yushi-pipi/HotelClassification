@@ -78,8 +78,9 @@ def start_predict():
 
     for i, p in enumerate(pre):
         y = p.argmax()
-        print("これは,,,", categories[y])
-        return("これは,,,", categories[y])
+        result = "これは..."+categories[y]+"!!"
+        print(result)
+        return(result)
 
 
 if __name__ == '__main__':

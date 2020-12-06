@@ -16,7 +16,7 @@ FQDN = "https://flasktest1206.herokuapp.com/"
 line_bot_api=LineBotApi(ACCESS_TOKEN)
 handler=WebhookHandler(SECRET)
 
-test_message = 'yushi'
+test_message = '画像を送ってね'
 
 @app.route("/callback",methods=['POST'])
 def callback():
