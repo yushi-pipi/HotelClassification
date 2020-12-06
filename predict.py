@@ -48,7 +48,7 @@ def start_predict():
     for file in os.listdir("static/"):
         if file != ".DS_Store":
             if file != "test.txt":
-                filepath = "Data/test/" + file
+                filepath = "static/" + file
                 lst.append(filepath)
             
                 
